@@ -53,6 +53,7 @@ build.xml
 
 # IntelliJ IDEA files #
 #######################
+<<<<<<< HEAD
 .idea
 *.jpage
 /src/main/java/Test.java
@@ -65,3 +66,15 @@ build.xml
 # Maven leftovers #
 ####################
 /dependency-reduced-pom.xml
+=======
+.idea
+*.jpage
+/src/main/java/Test.java
+/techniclauncher
+/launcher.properties
+/modpack.yml
+/src/main/java/org/spoutcraft/launcher/gui/widget/CustomComboBoxDemo.java
+/.techniclauncher
+/src-technic/
+/technicraft-launcher.iml
+>>>>>>> 9b716da... Initial work on 1.0
