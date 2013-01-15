@@ -18,9 +18,9 @@ public class MinecraftDownloadUtils {
     int tries = 3;
     File outputFile = null;
     while (tries > 0) {
-      Util.logi("Starting download of minecraft, with %s trie(s) remaining", tries);
+      Util.logi("Starting download of Minecraft %s, with %s trie(s) remaining", requiredMinecraftVersion, tries);
       tries--;
-      Download download = new Download(build.getMinecraftURL(user), output);
+      Download download = new Download(build.getMinecraftURL(user, requiredMinecraftVersion), output);
       download.setListener(listener);
       download.run();
       if (!download.isSuccess()) {
