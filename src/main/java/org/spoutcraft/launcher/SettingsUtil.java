@@ -18,7 +18,7 @@ public class SettingsUtil {
 
   public static void init() {
     isLatestLWJGL();
-    isWorldBackup();
+    //isWorldBackup();
     getLoginTries();
     isRecommendedBuild();
     isDevelopmentBuild();
@@ -32,11 +32,11 @@ public class SettingsUtil {
   public static void setLatestLWJGL(boolean value) {
     setProperty("latestLWJGL", value);
   }
-
+  /*
   public static boolean isWorldBackup() {
     return isProperty("worldbackup");
   }
-
+  */
   public static void setWorldBackup(boolean value) {
     setProperty("worldbackup", value);
   }

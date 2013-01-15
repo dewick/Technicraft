@@ -27,6 +27,7 @@ import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
+import org.spoutcraft.launcher.Main;
 import org.spoutcraft.launcher.Util;
 
 /**
@@ -59,7 +60,7 @@ public class Download implements Runnable {
   public void run() {
     try {
       URLConnection conn = url.openConnection();
-      conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30");
+      conn.setRequestProperty("User-Agent", "TechniCraft v" + Main.build + " Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30");
       InputStream in = getConnectionInputStream(conn);
 
       size = conn.getContentLength();

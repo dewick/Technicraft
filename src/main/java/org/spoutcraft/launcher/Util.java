@@ -75,6 +75,11 @@ public class Util {
 
     try {
       is = FileUtils.class.getResourceAsStream(s);
+      if (is == null) {
+        Util.log("Failed to read from %s", s);
+        list.add(Main.build);
+        return list;
+      }
       br = new BufferedReader(new InputStreamReader(is));
       while (null != (line = br.readLine())) {
         list.add(line);
@@ -97,7 +102,7 @@ public class Util {
   public static String getBuild() {
     List<String> lines = null;
     try {
-      lines = readTextFromJar("/META-INF/maven/org.spoutcraft/technic-launcher/pom.properties");
+      lines = readTextFromJar("/META-INF/maven/org.spoutcraft/technicraft-launcher/pom.properties");
     } catch (NullPointerException e) {
     }
     for (String line : lines) {

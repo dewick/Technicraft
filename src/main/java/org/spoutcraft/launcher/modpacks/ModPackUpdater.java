@@ -31,9 +31,9 @@ import org.spoutcraft.launcher.async.Download;
 @SuppressWarnings("unchecked")
 public class ModPackUpdater extends GameUpdater {
 
-  public static final String  defaultModPackName = "technicssp";
+  public static final String  defaultModPackName = "technicraft";
 
-  private static final String baseFallbackURL    = "http://mirror.technicpack.net/Technic/";
+  private static final String baseFallbackURL    = "http://technicraft.cz/modpack/";
   private static final String fallbackModsURL    = baseFallbackURL + "mods/";
 
   public void updateModPackMods() {
@@ -192,7 +192,7 @@ public class ModPackUpdater extends GameUpdater {
       removePreviousModVersion(modName, installedVersion);
     }
 
-    stateChanged("Extracting Files ...", 0);
+    stateChanged("Extracting " + modName + " ...", 0);
     // Extract Mod zip
     extractCompressedFile(GameUpdater.modpackDir, modFile, true);
 

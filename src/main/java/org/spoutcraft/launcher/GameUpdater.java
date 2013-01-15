@@ -63,6 +63,7 @@ public class GameUpdater implements DownloadListener {
   public static File         modsDir            = new File(WORKING_DIRECTORY, "mods");
   public static File         libsDir            = new File(WORKING_DIRECTORY, "lib");
   public static File         coremodsDir        = new File(WORKING_DIRECTORY, "coremods");
+  public static File         flansDir           = new File(WORKING_DIRECTORY, "Flans");
   public static File         modconfigsDir      = new File(WORKING_DIRECTORY, "config");
   public static File         resourceDir        = new File(WORKING_DIRECTORY, "resources");
 
@@ -304,7 +305,7 @@ public class GameUpdater implements DownloadListener {
   }
 
   public void updateSpoutcraft() throws Exception {
-    performBackup();
+    //performBackup();
     ModpackBuild build = ModpackBuild.getSpoutcraftBuild();
 
     tempDir.mkdirs();
@@ -367,7 +368,7 @@ public class GameUpdater implements DownloadListener {
       e.printStackTrace();
     }
   }
-
+  /*
   public void performBackup() throws IOException {
     if (!backupDir.exists()) {
       backupDir.mkdir();
@@ -407,7 +408,7 @@ public class GameUpdater implements DownloadListener {
         FileUtils.deleteDirectory(resourceDir);
     }
   }
-
+  */
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public static boolean canPlayOffline() {
     try {
@@ -580,4 +581,104 @@ public class GameUpdater implements DownloadListener {
   public void setListener(DownloadListener listener) {
     this.listener = listener;
   }
+
+    public void backupTechnicraft() throws Exception {
+        File techniBackup = new File(WORKING_DIRECTORY, "backupDirTechnicraft");
+        File opt = new File(modpackDir, "options.txt");
+        File optof = new File(modpackDir, "optionsof.txt");
+        File matmos = new File(modpackDir, "matmos_options.cfg");
+
+        File saves = savesDir;
+        File tp = new File(modpackDir, "texturepacks");
+        File stats = new File(modpackDir, "stats");
+
+        File mods = new File(techniBackup, "mods");
+
+        File reis = new File(modsDir, "rei_minimap");
+        File mod1 = new File(modsDir, "ccSensors");
+        File mod2 = new File(modsDir, "ComputerCraft");
+
+        techniBackup.mkdirs();
+
+        if (opt.exists()) {
+          copy(opt,new File(techniBackup,opt.getName()));
+        } {
+          Util.log("[BACKUP] options.txt not found");
+        }
+        if (optof.exists()) {
+          copy(optof,new File(techniBackup,optof.getName()));
+        } {
+          Util.log("[BACKUP] optionsof.txt not found");
+        }
+        if (matmos.exists()) {
+          copy(matmos,new File(techniBackup,matmos.getName()));
+        } {
+          Util.log("[BACKUP] matmos_options.cfg not found");
+        }
+
+
+        copyDirectory(saves,new File(techniBackup,saves.getName()));
+        copyDirectory(tp,new File(techniBackup,tp.getName()));
+        copyDirectory(stats,new File(techniBackup,stats.getName()));
+
+        mods.mkdirs();
+
+        if (reis.exists()) {
+            copyDirectory(reis,new File(mods,reis.getName()));
+        } {
+            Util.log("[BACKUP] mods/rei_minimap not found");
+        }
+        if (mod1.exists()) {
+          copyDirectory(mod1,new File(mods,mod1.getName()));
+        } {
+            Util.log("[BACKUP] mods/ccSensors not found");
+        }
+        if (mod2.exists()) {
+          copyDirectory(mod2,new File(mods,mod2.getName()));
+        } {
+            Util.log("[BACKUP] mods/ComputerCraft not found");
+        }
+
+        // smazeme slozku
+        FileUtils.deleteDirectory(modsDir);
+        FileUtils.deleteDirectory(coremodsDir);
+    }
+
+    public void restoreTechnicraft() throws Exception {
+        File techniBackup = new File(WORKING_DIRECTORY, "backupDirTechnicraft");
+        File restoreTo = modpackDir;
+
+        copyDirectory(techniBackup,restoreTo);
+
+        FileUtils.deleteDirectory(techniBackup);
+    }
+
+    public void copyDirectory(File sourceLocation , File targetLocation) throws Exception {
+        if(!sourceLocation.exists())
+            return;
+        if (sourceLocation.isDirectory()) {
+            if (!targetLocation.exists()) {
+                targetLocation.mkdirs();
+            }
+
+            String[] children = sourceLocation.list();
+            for (int i=0; i<children.length; i++) {
+                copyDirectory(new File(sourceLocation, children[i]),
+                        new File(targetLocation, children[i]));
+            }
+        } else {
+
+            InputStream in = new FileInputStream(sourceLocation);
+            OutputStream out = new FileOutputStream(targetLocation);
+
+            // Copy the bits from instream to outstream
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
+        }
+    }
 }

@@ -174,7 +174,8 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     }
     String[] itemArray = new String[i];
     modpackList = new JComboBox(items.toArray(itemArray));
-    modpackList.setBounds(10, 10, 328, 100);
+    //modpackList.setBounds(10, 10, 328, 100);  // new tekkit
+    modpackList.setBounds(0, 10, 473, 79);
     ComboBoxRenderer renderer = new ComboBoxRenderer();
     renderer.setPreferredSize(new Dimension(200, 110));
     
@@ -183,7 +184,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     modpackList.setSelectedItem(SettingsUtil.getModPackSelection());
     modpackList.addActionListener(this);
 
-    JLabel lblMinecraftUsername = new JLabel("Minecraft Username: ");
+    JLabel lblMinecraftUsername = new JLabel("Username: ");
     lblMinecraftUsername.setFont(new Font("Arial", Font.PLAIN, 11));
     lblMinecraftUsername.setHorizontalAlignment(SwingConstants.RIGHT);
     lblMinecraftUsername.setBounds(-17, 17, 150, 14);
@@ -298,8 +299,8 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     loginPane.add(usernameField);
     loginPane.add(loginButton);
     loginPane.add(rememberCheckbox);
-    loginPane.add(purchaseAccount);
-    loginPane.add(wikiLink);
+    //loginPane.add(purchaseAccount);
+    //loginPane.add(wikiLink);
     loginPane.add(optionsButton);
     loginPane.add(modsButton);
     contentPane.add(loginPane);
@@ -317,7 +318,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     offlineMode.setBounds(257, 52, 100, 25);
 
     offlinePane.setBounds(473, 362, 372, 99);
-    // offlinePane.add(tryAgain);
+    offlinePane.add(tryAgain);
     offlinePane.add(offlineMode);
     offlinePane.add(offlineMessage);
     offlinePane.setVisible(false);
@@ -366,7 +367,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     if (SettingsUtil.getModPackSelection() != null) {
       updateBranding();
     } else {
-      setTitle("Technic Launcher - No Modpack Selected");
+      setTitle("TechniCraft Launcher");
     }
   }
 
@@ -393,7 +394,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
         loginButton.setEnabled(true);
         optionsButton.setEnabled(true);
         setIconImage(Toolkit.getDefaultToolkit().getImage(ModPackYML.getModPackIcon()));
-        setTitle(String.format("Technic Launcher - %s - (%s)", Main.build, ModPackListYML.currentModPackLabel));
+        setTitle(String.format("TechniCraft Launcher v%s | (%s)", Main.build, ModPackListYML.currentModPackLabel));
         options.reloadSettings();
         MinecraftYML.updateMinecraftYMLCache();
         setModLoaderEnabled();
@@ -755,7 +756,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
               e.printStackTrace();
             }
 
-            publish("Checking for Spoutcraft update...\n");
+            publish("Checking for TechniCraft update...\n");
             try {
               spoutUpdate = gameUpdater.isSpoutcraftUpdateAvailable();
             } catch (Exception e) {
@@ -781,11 +782,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
               updateDialog.setToUpdate("Minecraft");
             }
             if (mcUpdate || spoutUpdate || modpackUpdate) {
-              if (!GameUpdater.binDir.exists() || mcUpdate) {
                 updateThread();
-              } else {
-                LoginForm.updateDialog.setVisible(true);
-              }
             } else {
               runGame();
             }
@@ -822,6 +819,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
       @Override
       protected Boolean doInBackground() throws Exception {
         try {
+          gameUpdater.backupTechnicraft();
           if (mcUpdate) {
             gameUpdater.updateMC();
           }
@@ -831,6 +829,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
           if (modpackUpdate) {
             gameUpdater.updateModPackMods();
           }
+          gameUpdater.restoreTechnicraft();
         } catch (NoMirrorsAvailableException e) {
           JOptionPane.showMessageDialog(getParent(), "No Mirrors Are Available to download from!\nTry again later.");
         } catch (Exception e) {
@@ -920,7 +919,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
   @Override
   public void windowClosed(WindowEvent e) {
     if (success == LauncherFrame.ERROR_IN_LAUNCH) {
-      Util.log("Exiting the Technic Launcher");
+      Util.log("Exiting the TechniCraft Launcher");
       System.exit(0);
     }
   }

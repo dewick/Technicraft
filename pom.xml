@@ -4,8 +4,8 @@
 
 	<!-- Project information -->
 	<groupId>org.spoutcraft</groupId>
-	<artifactId>technic-launcher</artifactId>
-	<version>1.1.2.0</version>
+	<artifactId>technicraft-launcher</artifactId>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 	<properties>
 		<buildNumber>0</buildNumber>
@@ -14,8 +14,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<name>Technic Launcher</name>
-	<description>A launcher for the Minecraft Modpacks</description>
+	<name>TechniCraft Launcher</name>
+	<description>TechniCraft Launcher</description>
 	<url>https://github.com/TechnicPack/Spoutcraft-Launcher</url>
 
 	<!-- License -->
@@ -263,13 +263,13 @@
 									<mainClass>${mainClass}</mainClass>
 									<bundleName>${project.name}</bundleName>
 									<version>${project.version}</version>
-									<iconFile>${basedir}/src/main/resources/app/icon.icns</iconFile>
+									<iconFile>${basedir}/src/main/resources/launcher_icon.icns</iconFile>
 									<dictionaryFile>${basedir}/src/main/resources/app/Info.plist.template</dictionaryFile>
 									<javaApplicationStub>${basedir}/src/main/resources/app/JavaApplicationStub</javaApplicationStub>
 									<zipFile>${project.build.directory}/${project.build.finalName}-app.zip</zipFile>
 									<internetEnable>true</internetEnable>
 									<jvmVersion>1.6+</jvmVersion>
-									<vmOptions>-Xms512M -Xmx1024M -Xdock:name="Technic Launcher" -Xdock:icon="icon.icns"</vmOptions>
+									<vmOptions>-Xms1024M -Xmx2048M -XX:MaxPermSize=256m -Xdock:name="TechniCraft Launcher" -Xdock:icon="icon.icns"</vmOptions>
 									<excludeArtifactIds>
 										<excludeArtifactId>commons-codec</excludeArtifactId>
 										<excludeArtifactId>jcommander</excludeArtifactId>
@@ -279,9 +279,6 @@
 									<additionalResources>
 										<fileSet>
 											<directory>${basedir}</directory>
-											<includes>
-												<include>LICENSE.txt</include>
-											</includes>
 										</fileSet>
 									</additionalResources>
 								</configuration>

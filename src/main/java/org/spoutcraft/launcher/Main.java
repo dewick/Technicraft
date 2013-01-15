@@ -38,7 +38,7 @@ import com.beust.jcommander.JCommander;
 public class Main {
 
   static String[]         args_temp;
-  public static String    build     = "1.1.2.0";
+  public static String    build     = "1.2";
   public static String    currentPack;
   static File             recursion;
   public static LoginForm loginForm;
@@ -54,22 +54,39 @@ public class Main {
       // int mem = (512) * memorySelection;
       String osType = System.getProperty("sun.arch.data.model");
       if (osType != null && !osType.contains("64") && memoryAllocation > 1536) {
-        Util.log("32-bit Vm being used. Max memory is 1.5Gb");
-        memoryAllocation = 1536;
+        Util.log("[!!!] 32-bit Vm being used. Max memory should be 1.5Gb");
+//        memoryAllocation = 1536;
       }
       String pathToJar = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
       ArrayList<String> params = new ArrayList<String>();
-      params.add("java"); // Linux/Mac/whatever
-      // if (memoryAllocation > 512) params.add("-Xincgc");
+      if (PlatformUtils.getPlatform() == PlatformUtils.OS.windows) {
+        params.add("javaw"); // Windows
+      } else {
+        params.add("java"); // Linux, OSX, others
+      }
+
+      if (memoryAllocation > 512) params.add("-Xincgc");
       if (memory.contains("-Xmx")) {
         params.add(memory);
       } else {
         params.add("-Xmx" + memoryAllocation + "m");
       }
 
+      params.add("-XX:MaxPermSize=256m");
+
       if (PlatformUtils.getPlatform() != PlatformUtils.OS.windows) {
         params.add("-classpath");
         params.add(pathToJar);
+        if (PlatformUtils.getPlatform() == PlatformUtils.OS.macos) {
+          params.add("-Xdock:name=TechniCraft Launcher");
+
+          try {
+            File icon = new File(PlatformUtils.getWorkingDirectory(), "launcher_icon.icns");
+            GameUpdater.copy(Main.class.getResourceAsStream("/org/spoutcraft/launcher/launcher_icon.icns"), new FileOutputStream(icon));
+            params.add("-Xdock:icon=" + icon.getCanonicalPath());
+          } catch (Exception ignore) {
+          }
+        }
         params.add("org.spoutcraft.launcher.Main");
       } else {
         params.add("-jar");
@@ -78,16 +95,6 @@ public class Main {
 
       params.addAll(Arrays.asList(args_temp));
 
-      if (PlatformUtils.getPlatform() == PlatformUtils.OS.macos) {
-        params.add("-Xdock:name=\"Technic Launcher\"");
-
-        try {
-          File icon = new File(PlatformUtils.getWorkingDirectory(), "launcher_icon.icns");
-          GameUpdater.copy(Main.class.getResourceAsStream("/org/spoutcraft/launcher/launcher_icon.icns"), new FileOutputStream(icon));
-          params.add("-Xdock:icon=" + icon.getCanonicalPath());
-        } catch (Exception ignore) {
-        }
-      }
       ProcessBuilder pb = new ProcessBuilder(params);
 
       Util.log("Rebooting with %s", Arrays.toString(pb.command().toArray()));
@@ -110,10 +117,19 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     LoadingScreen ls = new LoadingScreen();
+    ls.setSize(600,139);
+
     if (!isDebug()) {
+      try {
+        //Not always supported...
+        ls.setBackground(new Color(0,0,0,0));
+      } catch (UnsupportedOperationException e) {
+        ls.setBackground(new Color(0,0,0));
+      }
       ls.setVisible(true);
       build = Util.getBuild();
     }
+
     Options options = new Options();
     try {
       new JCommander(options, args);
@@ -125,16 +141,17 @@ public class Main {
 
     args_temp = args;
     boolean relaunch = false;
-    try {
-      if (!recursion.exists()) {
-        relaunch = true;
-      } else {
-        recursion.delete();
+    if (!isDebug()) { // do not relaunch in debug
+      try {
+        if (!recursion.exists()) {
+          relaunch = true;
+        } else {
+          recursion.delete();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-    } catch (Exception e) {
-      e.printStackTrace();
     }
-
     if (relaunch) {
       ls.close();
       // if (SettingsUtil.getMemorySelection() < 6) {
@@ -154,7 +171,7 @@ public class Main {
     if (PlatformUtils.getPlatform() == PlatformUtils.OS.macos) {
       try {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Technic Launcher");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "TechniCraft Launcher");
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
       } catch (Exception ignore) {
       }
@@ -171,7 +188,7 @@ public class Main {
 
     Util.log("------------------------------------------");
     Util.log("Launcher is starting....");
-    Util.log("Launcher Build: '%s'", getBuild());
+    Util.log("Launcher Build: '%s' Debug mode: %s", getBuild(), isDebug());
     Util.log("Allocated %s Mb of RAM", Runtime.getRuntime().maxMemory() / (1024.0 * 1024));
 
     String javaVM = System.getProperty("java.runtime.version");

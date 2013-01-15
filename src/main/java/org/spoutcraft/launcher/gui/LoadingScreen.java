@@ -30,6 +30,7 @@ public class LoadingScreen extends JDialog {
     // don't show a frame or title bar
     setUndecorated(true);
     setBounds(0, 0, 732, 224);
+    //setBounds(0, 0, 600, 139);
 
     // Create JPanel and set it as the content pane
     contentPane = new JPanel();
@@ -81,17 +82,19 @@ public class LoadingScreen extends JDialog {
     // close "button" - show this image by default
     closeNormal = new ImageIcon(getClass().getResource("/org/spoutcraft/launcher/splash_logo.png"));
     closeLabel = new JLabel(closeNormal);
+    closeLabel.setOpaque(false);
 
     // Put the label with the image on the far right
     closePanel.add(closeLabel, BorderLayout.WEST);
 
     // Add the two panels to the content pane
     contentPane.setLayout(new BorderLayout());
+    contentPane.setOpaque(false);
     contentPane.add(closePanel, BorderLayout.NORTH);
-    contentPane.add(main, BorderLayout.CENTER);
+    //contentPane.add(main, BorderLayout.CENTER);
 
     // set raised beveled border for window
-    contentPane.setBorder(BorderFactory.createRaisedBevelBorder());
+    //contentPane.setBorder(BorderFactory.createRaisedBevelBorder());
 
     // Set position somewhere near the middle of the screen
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

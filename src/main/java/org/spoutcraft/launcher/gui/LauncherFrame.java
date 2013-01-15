@@ -84,7 +84,7 @@ public class LauncherFrame extends JFrame implements WindowListener {
     } catch (CorruptedMinecraftJarException corruption) {
       corruption.printStackTrace();
     } catch (MinecraftVerifyException verify) {
-      System.err.println("Exception thrown while initializing MineCraft.");
+      System.err.println("Exception thrown while initializing TechniCraft.");
       verify.printStackTrace();
       OptionDialog.clearCache();
       JOptionPane.showMessageDialog(getParent(),
@@ -93,7 +93,7 @@ public class LauncherFrame extends JFrame implements WindowListener {
       this.dispose();
       return ERROR_IN_LAUNCH;
     } catch (Throwable t) {
-      System.err.println("Exception thrown while initializing MineCraft.");
+      System.err.println("Exception thrown while initializing TechniCraft.");
       t.printStackTrace();
       applet = null;
     }
@@ -135,7 +135,7 @@ public class LauncherFrame extends JFrame implements WindowListener {
       minecraft.setSize(getWidth(), getHeight());
       minecraft.start();
     } catch (Throwable t) {
-      System.err.println("Exception thrown while initializing MineCraft.");
+      System.err.println("Exception thrown while initializing TechniCraft.");
       t.printStackTrace();
       JOptionPane.showMessageDialog(getParent(), "Minecraft failed to start, errors reported in the log.");
       this.setVisible(false);

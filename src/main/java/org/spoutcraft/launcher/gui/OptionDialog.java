@@ -61,7 +61,7 @@ public class OptionDialog extends JDialog implements ActionListener {
   JRadioButton               customBuilds       = new JRadioButton("Manual build selection");
   // JCheckBox clipboardCheckbox = new
   // JCheckBox("Allow access to your clipboard");
-  JCheckBox                  backupCheckbox     = new JCheckBox("Include worlds when doing automated backup");
+  //JCheckBox                  backupCheckbox     = new JCheckBox("Include worlds when doing automated backup");
   JCheckBox                  retryLoginCheckbox = new JCheckBox("Retry after connection timeout");
   JComboBox                  memoryCombo        = new JComboBox();
   JButton                    clearCache         = new JButton("Clear Cache");
@@ -75,14 +75,14 @@ public class OptionDialog extends JDialog implements ActionListener {
    * Create the dialog.
    */
   public OptionDialog() {
-    setTitle("Technic Launcher Settings");
+    setTitle("TechniCraft Launcher Settings");
 
     ButtonGroup group = new ButtonGroup();
     group.add(devBuilds);
     group.add(recBuilds);
     group.add(customBuilds);
 
-    buildInfo.setText("Technic Launcher Build " + Main.build);
+    buildInfo.setText("TechniCraft Launcher Build " + Main.build);
     buildInfo.setOpaque(true);
     buildInfo.setForeground(Color.DARK_GRAY);
     buildInfo
@@ -96,7 +96,7 @@ public class OptionDialog extends JDialog implements ActionListener {
     devBuilds.setToolTipText("Development builds are often unstable and buggy. Use at your own risk!");
     recBuilds.setToolTipText("Recommended builds are (nearly) bug-free and well-tested.");
     // clipboardCheckbox.setToolTipText("Allows server mods to see the contents of your clipboard.");
-    backupCheckbox.setToolTipText("Backs up your Single Player worlds after each Modpack update");
+    //backupCheckbox.setToolTipText("Backs up your Single Player worlds after each Modpack update");
     retryLoginCheckbox.setToolTipText("Retries logging into minecraft.net up to 3 times after a failure");
     clearCache.setToolTipText("Clears the cached minecraft and Modpack files, forcing a redownload on your next login");
     memoryCombo.setToolTipText("Allows you to adjust the memory assigned to Minecraft. Assigning more memory than you have may cause crashes.");
@@ -115,17 +115,19 @@ public class OptionDialog extends JDialog implements ActionListener {
     memoryCombo.addItem("512 MB");
     memoryCombo.addItem("1 GB");
     memoryCombo.addItem("1536 MB");
+    memoryCombo.addItem("2 GB");
+    memoryCombo.addItem("2536 GB");
+    memoryCombo.addItem("3 GB");
 
     String vmType = System.getProperty("sun.arch.data.model");
     if (vmType != null && vmType.equals("64")) {
-      memoryCombo.addItem("2 GB");
       memoryCombo.addItem("4 GB");
       memoryCombo.addItem("8 GB");
       memoryCombo.addItem("16 GB");
     }
 
     JLabel lblMemoryToAllocate = new JLabel("Memory to allocate: ");
-    JLabel selectBuild = new JLabel("Select Modpack build: ");
+    JLabel selectBuild = new JLabel("Modpack Build: ");
 
     GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
     gl_contentPanel.setHorizontalGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING).addGroup(
@@ -143,7 +145,7 @@ public class OptionDialog extends JDialog implements ActionListener {
                     .addComponent(customBuilds)
                     .addGroup(gl_contentPanel.createSequentialGroup())
                     // .addComponent(clipboardCheckbox)
-                    .addComponent(backupCheckbox)
+                    //.addComponent(backupCheckbox)
                     .addComponent(retryLoginCheckbox)
                     .addComponent(clearCache)
                     .addComponent(buildInfo)
@@ -155,7 +157,7 @@ public class OptionDialog extends JDialog implements ActionListener {
                             .addComponent(memoryCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))).addContainerGap(27, Short.MAX_VALUE)));
 
     Font font = new Font("Arial", Font.PLAIN, 11);
-    backupCheckbox.setFont(font);
+    //backupCheckbox.setFont(font);
     // clipboardCheckbox.setFont(font);
     devBuilds.setFont(font);
     recBuilds.setFont(font);
@@ -175,7 +177,7 @@ public class OptionDialog extends JDialog implements ActionListener {
             .addComponent(retryLoginCheckbox)
             .addPreferredGap(ComponentPlacement.RELATED)
             // .addComponent(clipboardCheckbox)
-            .addComponent(backupCheckbox)
+            //.addComponent(backupCheckbox)
             .addPreferredGap(ComponentPlacement.RELATED)
             .addGroup(
                 gl_contentPanel.createParallelGroup(Alignment.BASELINE).addComponent(memoryCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -234,7 +236,7 @@ public class OptionDialog extends JDialog implements ActionListener {
     updateBuildsList();
 
     // clipboardCheckbox.setSelected(SettingsUtil.isClipboardAccess());
-    backupCheckbox.setSelected(SettingsUtil.isWorldBackup());
+    //backupCheckbox.setSelected(SettingsUtil.isWorldBackup());
     retryLoginCheckbox.setSelected(SettingsUtil.getLoginTries() > 1);
 
     int memIndex = Arrays.binarySearch(memValues, SettingsUtil.getMemorySelection() / 512);
@@ -273,7 +275,7 @@ public class OptionDialog extends JDialog implements ActionListener {
       SettingsUtil.setDevelopmentBuild(devBuilds.isSelected());
       SettingsUtil.setRecommendedBuild(recBuilds.isSelected());
       // SettingsUtil.setClipboardAccess(clipboardCheckbox.isSelected());
-      SettingsUtil.setWorldBackup(backupCheckbox.isSelected());
+      //SettingsUtil.setWorldBackup(backupCheckbox.isSelected());
       SettingsUtil.setLoginTries(retryLoginCheckbox.isSelected());
 
       if (SettingsUtil.getMemorySelection() > (memValues[memValues.length - 1] * 512)) {
@@ -346,7 +348,10 @@ public class OptionDialog extends JDialog implements ActionListener {
     File modsConfig = InstalledModsYML.getInstalledModsYmlFile();
     if (modsConfig.exists())
       modsConfig.delete();
-    FileUtils.cleanDirectory(GameUpdater.modsDir);
+      FileUtils.cleanDirectory(new File(GameUpdater.modpackDir,"config"));
+      //FileUtils.cleanDirectory(GameUpdater.modsDir);
+      FileUtils.cleanDirectory(GameUpdater.coremodsDir);
+      FileUtils.cleanDirectory(GameUpdater.flansDir);
   }
 
   public void updateBuildsCombo() {

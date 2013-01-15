@@ -114,7 +114,7 @@ public class ModPackYML {
         String version = String.valueOf(map.get("minecraft"));
         results[index] += "| " + version;
         if (i.equals(latestBuild)) {
-          results[index] += " | Latest";
+          results[index] += " | Dev";
         }
         if (i.equals(recommendedBuild)) {
           results[index] += " | Rec. Build";

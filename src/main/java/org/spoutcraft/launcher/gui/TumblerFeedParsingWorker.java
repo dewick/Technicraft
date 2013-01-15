@@ -15,6 +15,7 @@ import javax.swing.ToolTipManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import org.spoutcraft.launcher.Main;
 import org.spoutcraft.launcher.MirrorUtils;
 import org.spoutcraft.launcher.Util;
 
@@ -36,7 +37,7 @@ public class TumblerFeedParsingWorker extends SwingWorker<Object, Object> implem
   protected Object doInBackground() {
     URL url = null;
     try {
-      url = new URL("http://mirror.technicpack.net/Technic/");
+      url = new URL("http://technicraft.cz/launcher/?launcher=" + Main.build);
 
       if (MirrorUtils.isAddressReachable(url.toString())) {
         editorPane.setVisible(false);
@@ -82,18 +83,12 @@ public class TumblerFeedParsingWorker extends SwingWorker<Object, Object> implem
 
   private String getTimeOfDay() {
     int hours = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-    if (hours < 6)
-      return "Night";
-    if (hours < 12)
-      return "Morning";
-    if (hours < 14)
-      return "Day";
-    if (hours < 18)
-      return "Afternoon";
-    if (hours < 22) {
-      return "Evening";
-    }
-    return "Night";
+    if (hours < 6) return "Ty ještě nespíš? Ahoj";
+    if (hours < 12) return "Dobé ráno";
+    if (hours < 14) return "Ahoj";
+    if (hours < 18) return "Čau";
+    if (hours < 22) { return "V televizi nic neni? Ahoj"; }
+    return "Ty ještě nespíš? Ahoj";
   }
 
   @Override

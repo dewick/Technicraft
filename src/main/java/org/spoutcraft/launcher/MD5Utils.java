@@ -13,7 +13,7 @@ import org.bukkit.util.config.Configuration;
 
 public class MD5Utils {
 
-  private static final String              CHECKSUM_MD5  = "CHECKSUM.md5";
+  private static final String              CHECKSUM_MD5  = "chksm.md5";
   private static final File                CHECKSUM_FILE = new File(GameUpdater.workDir, CHECKSUM_MD5);
   private static boolean                   updated;
   private static final Map<String, String> md5Map        = new HashMap<String, String>();
@@ -123,6 +123,10 @@ public class MD5Utils {
     if (!file.exists()) {
       return false;
     }
+    if (file.getName().equals("modpack.yml")) {
+      return false;
+    }
+
     String fileMD5 = getMD5(file);
     String storedMD5 = getMD5FromList(md5Path);
     if (storedMD5 == null) {
