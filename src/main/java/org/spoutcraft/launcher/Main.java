@@ -118,7 +118,7 @@ public class Main {
   public static void main(String[] args) throws Exception {
     LoadingScreen ls = new LoadingScreen();
     ls.setSize(600,139);
-
+    
     if (!isDebug()) {
       try {
         //Not always supported...

@@ -1,6 +1,7 @@
 package org.spoutcraft.launcher.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -35,7 +36,7 @@ public class LoadingScreen extends JDialog {
     // Create JPanel and set it as the content pane
     contentPane = new JPanel();
     setContentPane(contentPane);
-
+    
     // If main has not already been created, create it.
     // Explained later
     if (main == null) {
@@ -81,11 +82,12 @@ public class LoadingScreen extends JDialog {
 
     // close "button" - show this image by default
     closeNormal = new ImageIcon(getClass().getResource("/org/spoutcraft/launcher/splash_logo.png"));
-    closeLabel = new JLabel(closeNormal);
+    closeLabel = new JLabel(closeNormal);//closeNormal);
     closeLabel.setOpaque(false);
 
     // Put the label with the image on the far right
     closePanel.add(closeLabel, BorderLayout.WEST);
+    closePanel.setOpaque(false);
 
     // Add the two panels to the content pane
     contentPane.setLayout(new BorderLayout());
