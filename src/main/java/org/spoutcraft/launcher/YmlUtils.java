@@ -60,7 +60,7 @@ public class YmlUtils {
       URLConnection con = (url.openConnection());
 
       System.setProperty("http.agent", "");
-      con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534.30 (KHTML, like Gecko) Chrome/12.0.742.100 Safari/534.30");
+      con.setRequestProperty("User-Agent", "TechniCraft v" + Main.build + " Mozilla/5.0 (Windows NT 6.1; WOW64)");
 
       // Download to temporary file
       File tempFile = new File(GameUpdater.tempDir, ymlFile.getName());
