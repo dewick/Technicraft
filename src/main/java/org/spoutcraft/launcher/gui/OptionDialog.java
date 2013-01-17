@@ -50,6 +50,7 @@ import org.spoutcraft.launcher.MinecraftYML;
 import org.spoutcraft.launcher.SettingsUtil;
 import org.spoutcraft.launcher.modpacks.InstalledModsYML;
 import org.spoutcraft.launcher.modpacks.ModPackYML;
+import org.spoutcraft.launcher.Util;
 
 public class OptionDialog extends JDialog implements ActionListener {
 
@@ -62,6 +63,7 @@ public class OptionDialog extends JDialog implements ActionListener {
   // JCheckBox clipboardCheckbox = new
   // JCheckBox("Allow access to your clipboard");
   //JCheckBox                  backupCheckbox     = new JCheckBox("Include worlds when doing automated backup");
+  JCheckBox                  latestLWJGLCheckbox = new JCheckBox("Use latest LWJGL binaries");
   JCheckBox                  retryLoginCheckbox = new JCheckBox("Retry after connection timeout");
   JComboBox                  memoryCombo        = new JComboBox();
   JButton                    clearCache         = new JButton("Clear Cache");
@@ -98,6 +100,7 @@ public class OptionDialog extends JDialog implements ActionListener {
     // clipboardCheckbox.setToolTipText("Allows server mods to see the contents of your clipboard.");
     //backupCheckbox.setToolTipText("Backs up your Single Player worlds after each Modpack update");
     retryLoginCheckbox.setToolTipText("Retries logging into minecraft.net up to 3 times after a failure");
+    latestLWJGLCheckbox.setToolTipText("Minecraft normally uses older, more compatible versions of LWJGL, but the latest may improve performance or fix audio issues");
     clearCache.setToolTipText("Clears the cached minecraft and Modpack files, forcing a redownload on your next login");
     memoryCombo.setToolTipText("Allows you to adjust the memory assigned to Minecraft. Assigning more memory than you have may cause crashes.");
 
@@ -146,6 +149,7 @@ public class OptionDialog extends JDialog implements ActionListener {
                     .addGroup(gl_contentPanel.createSequentialGroup())
                     // .addComponent(clipboardCheckbox)
                     //.addComponent(backupCheckbox)
+                    .addComponent(latestLWJGLCheckbox)
                     .addComponent(retryLoginCheckbox)
                     .addComponent(clearCache)
                     .addComponent(buildInfo)
@@ -178,6 +182,7 @@ public class OptionDialog extends JDialog implements ActionListener {
             .addPreferredGap(ComponentPlacement.RELATED)
             // .addComponent(clipboardCheckbox)
             //.addComponent(backupCheckbox)
+            .addComponent(latestLWJGLCheckbox)
             .addPreferredGap(ComponentPlacement.RELATED)
             .addGroup(
                 gl_contentPanel.createParallelGroup(Alignment.BASELINE).addComponent(memoryCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -211,6 +216,7 @@ public class OptionDialog extends JDialog implements ActionListener {
         buttonPane.add(cancelButton);
       }
     }
+    latestLWJGLCheckbox.setEnabled(true);
 
     contentPanel.revalidate();
     contentPanel.repaint();
@@ -238,6 +244,8 @@ public class OptionDialog extends JDialog implements ActionListener {
     // clipboardCheckbox.setSelected(SettingsUtil.isClipboardAccess());
     //backupCheckbox.setSelected(SettingsUtil.isWorldBackup());
     retryLoginCheckbox.setSelected(SettingsUtil.getLoginTries() > 1);
+    latestLWJGLCheckbox.setSelected(SettingsUtil.isLatestLWJGL());
+    //latestLWJGLCheckbox.setSelected(false);
 
     int memIndex = Arrays.binarySearch(memValues, SettingsUtil.getMemorySelection() / 512);
     if (memIndex < 0 || memIndex > memoryCombo.getItemCount()) {
@@ -294,6 +302,12 @@ public class OptionDialog extends JDialog implements ActionListener {
 
       if (SettingsUtil.getMemorySelection() < 128) {
         SettingsUtil.setMemorySelection(1024);
+      }
+
+      if (latestLWJGLCheckbox.isSelected() != SettingsUtil.isLatestLWJGL()) {
+        Util.logi("[LWJGL] Latest selected. Clearing lwjgl from cache.");
+        SettingsUtil.setLatestLWJGL(latestLWJGLCheckbox.isSelected());
+        clearLwjgl();
       }
 
       int selectedIndex = memoryCombo.getSelectedIndex();
@@ -382,7 +396,19 @@ public class OptionDialog extends JDialog implements ActionListener {
     contentPanel.revalidate();
     contentPanel.repaint();
   }
-
+  public static boolean clearLwjgl() {
+    try {
+      FileUtils.deleteDirectory(GameUpdater.binDir);
+      FileUtils.deleteDirectory(GameUpdater.tempDir);
+      FileUtils.deleteQuietly(new File(GameUpdater.cacheDir, "jinput.jar"));
+      FileUtils.deleteQuietly(new File(GameUpdater.cacheDir, "lwjgl_util.jar"));
+      FileUtils.deleteQuietly(new File(GameUpdater.cacheDir, "lwjgl.jar"));
+      return true;
+    } catch (IOException e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
   public static boolean clearCache() {
     try {
       FileUtils.deleteDirectory(GameUpdater.binDir);
