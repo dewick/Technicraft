@@ -91,6 +91,10 @@ public class ModPackYML {
     return Util.getResourceFile("favicon.png").getAbsolutePath();
   }
 
+  public static String getModPackBackground() {
+    return new File(ModPackListYML.currentModPackDirectory, "resources" + File.separator + "background.png").getAbsolutePath();
+  }
+
   public static String getLatestBuild() {
     return getModPackYML().getString("latest", null);
   }

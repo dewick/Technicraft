@@ -89,6 +89,7 @@ import org.spoutcraft.launcher.modpacks.ModLibraryYML;
 import org.spoutcraft.launcher.modpacks.ModPackListYML;
 import org.spoutcraft.launcher.modpacks.ModPackUpdater;
 import org.spoutcraft.launcher.modpacks.ModPackYML;
+import javax.swing.ImageIcon;
 
 public class LoginForm extends JFrame implements ActionListener, DownloadListener, KeyListener, WindowListener {
 
@@ -99,6 +100,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
   private final JButton                    loginButton      = new JButton("Login");
   JButton                                  optionsButton    = new JButton("Options");
   JButton                                  modsButton       = new JButton("Mod Select");
+  final JLabel                             background       = new JLabel("Loading...");
   private final JCheckBox                  rememberCheckbox = new JCheckBox("Remember");
   private final JButton                    offlineMode      = new JButton("Offline Mode");
   private final JButton                    tryAgain         = new JButton("Try Again");
@@ -155,7 +157,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-    setBounds((dim.width - 860) / 2, (dim.height - 500) / 2, 860, 500);
+    setBounds((dim.width - 860) / 2, (dim.height - 500) / 2, 850, 490);
 
     contentPane = new BackgroundPanel();
 
@@ -175,7 +177,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     String[] itemArray = new String[i];
     modpackList = new JComboBox(items.toArray(itemArray));
     //modpackList.setBounds(10, 10, 328, 100);  // new tekkit
-    modpackList.setBounds(0, 10, 473, 79);
+    modpackList.setBounds(8, 10, 460, 80);
     ComboBoxRenderer renderer = new ComboBoxRenderer();
     renderer.setPreferredSize(new Dimension(200, 110));
     
@@ -330,6 +332,9 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     contentPane.add(trans);
     contentPane.add(progressBar);
 
+    background.setBounds(0, -1, 850, 470);
+    contentPane.add(background);
+
     // TODO: remove this after next release
     (new File(PlatformUtils.getWorkingDirectory(), "launcher_cache.jpg")).delete();
 
@@ -393,6 +398,8 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
 
         loginButton.setEnabled(true);
         optionsButton.setEnabled(true);
+        background.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(ModPackYML.getModPackBackground())));
+        background.setText(null);
         setIconImage(Toolkit.getDefaultToolkit().getImage(ModPackYML.getModPackIcon()));
         setTitle(String.format("TechniCraft Launcher v%s | (%s)", Main.build, ModPackListYML.currentModPackLabel));
         options.reloadSettings();
@@ -908,8 +915,9 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
 
     File cacheDir = new File(PlatformUtils.getWorkingDirectory(), "cache");
     cacheDir.mkdir();
-    File backgroundImage = new File(cacheDir, "launcher_background.png");
-    (new BackgroundImageWorker(backgroundImage, contentPane)).execute();
+
+    background.setVerticalAlignment(SwingConstants.TOP);
+    background.setHorizontalAlignment(SwingConstants.LEFT);
   }
 
   @Override

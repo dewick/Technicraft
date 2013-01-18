@@ -31,6 +31,7 @@ public class ModPackListYML {
   private static final String                ICON_PNG                = "icon.png";
   private static final String                FAVICON_PNG             = "favicon.png";
   private static final String                LOGO_PNG                = "logo.png";
+  private static final String                BACKGROUND_JPG          = "background.png";
   private static final String                MODPACKS_YML            = "modpacks.yml";
 
   private static final List<String>          RESOURCES               = new LinkedList<String>();
@@ -55,6 +56,7 @@ public class ModPackListYML {
   static {
     RESOURCES.add(FAVICON_PNG);
     RESOURCES.add(LOGO_PNG);
+    RESOURCES.add(BACKGROUND_JPG);
     RESOURCES.add(getIconName());
     modpackMap = getModPacks();
   }
