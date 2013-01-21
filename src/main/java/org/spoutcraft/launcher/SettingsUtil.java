@@ -36,11 +36,11 @@ public class SettingsUtil {
   public static boolean isWorldBackup() {
     return isProperty("worldbackup");
   }
-  */
+
   public static void setWorldBackup(boolean value) {
     setProperty("worldbackup", value);
   }
-
+  */
   public static int getLoginTries() {
     return isProperty("retryLogins", true) ? 3 : 1;
   }

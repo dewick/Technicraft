@@ -43,6 +43,12 @@ public class Util {
     Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).info(String.format(formatString, params));
   }
 
+  public static void logd(String formatString, Object... params) {
+    if (Main.isDebug()) {
+      Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).warning("[DEBUG] " + String.format(formatString, params));
+    }
+  }
+
   public static void addComboItem(JComboBox combobox, String label, String value) {
     combobox.addItem(new ComboItem(label, value));
   }
@@ -100,7 +106,7 @@ public class Util {
   }
 
   public static String getBuild() {
-    List<String> lines = null;
+    /*List<String> lines = null;
     try {
       lines = readTextFromJar("/META-INF/maven/org.spoutcraft/technicraft-launcher/pom.properties");
     } catch (NullPointerException e) {
@@ -109,7 +115,7 @@ public class Util {
       if (line.contains("version")) {
         return line.replace("version=", "");
       }
-    }
+    }*/
     return Main.build;
   }
 

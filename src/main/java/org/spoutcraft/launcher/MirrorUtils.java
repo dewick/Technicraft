@@ -17,7 +17,7 @@ import org.spoutcraft.launcher.async.DownloadListener;
 
 public class MirrorUtils {
 
-  public static final String[] MIRRORS_URL = { "http://technicraft.cz/modpack/mirrors.yml" };
+  public static final String[] MIRRORS_URL = { "http://technicraft.cz/modpack/mirrors.yml", "http://dl.dropbox.com/u/75555/modpack/mirrors.yml" };
   public static File           mirrorsYML  = new File(GameUpdater.workDir, "mirrors.yml");
   private static boolean       updated     = false;
   private static final Random  rand        = new Random();
@@ -36,7 +36,8 @@ public class MirrorUtils {
         total += iterator.next().getValue();
       }
 
-      int random = rand.nextInt(total);
+      //int random = rand.nextInt(total);
+      int random = 0;
 
       int count = 0;
       boolean isFinished = false;

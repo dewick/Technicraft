@@ -92,7 +92,11 @@ public class ModPackListYML {
     Map<String, String> modPackMap = getModPacks();
     setModPack(SettingsUtil.getModPackSelection(), modPackMap.get(SettingsUtil.getModPackSelection()), false);
     File propFile = new File(GameUpdater.modpackDir, "launcher.properties");
-    if (!ORIGINAL_PROPERTIES.exists()) {
+
+    if (!ORIGINAL_PROPERTIES.exists() && SettingsUtil.settingsFile.exists()) {
+      if (!GameUpdater.cacheDir.exists()) { // first run error bug fix
+        GameUpdater.cacheDir.mkdirs();
+      }
       GameUpdater.copy(SettingsUtil.settingsFile, ORIGINAL_PROPERTIES);
     }
 
@@ -126,7 +130,7 @@ public class ModPackListYML {
       Map<String, String> modPacks = getModPacks();
       if (!modPacks.containsKey(modPack)) {
         // Mod Pack not in list
-        Util.log("ModPack '%s' not in '%s' file.", modPackLabel, MODPACKS_YML);
+        Util.logd("ModPack '%s' not in '%s' file.", modPackLabel, MODPACKS_YML);
         return false;
       }
     }

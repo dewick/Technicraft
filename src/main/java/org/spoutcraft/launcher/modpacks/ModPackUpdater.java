@@ -83,7 +83,7 @@ public class ModPackUpdater extends GameUpdater {
         }
       }
 
-      extractCustomZip();
+      //extractCustomZip();
     } catch (IOException e) {
       e.printStackTrace();
     }

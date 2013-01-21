@@ -114,6 +114,7 @@ public class OptionDialog extends JDialog implements ActionListener {
     getContentPane().add(contentPanel, BorderLayout.CENTER);
 
     urlText.setPreferredSize(new Dimension(250, 25));
+    urlText.setEnabled(false);
 
     memoryCombo.addItem("512 MB");
     memoryCombo.addItem("1 GB");
@@ -407,6 +408,9 @@ public class OptionDialog extends JDialog implements ActionListener {
     } catch (IOException e) {
       e.printStackTrace();
       return false;
+    } finally {
+      ModPackYML.getModPackYML().setProperty("current", null);
+      MinecraftYML.setInstalledVersion("");
     }
   }
   public static boolean clearCache() {

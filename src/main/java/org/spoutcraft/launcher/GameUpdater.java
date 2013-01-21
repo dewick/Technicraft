@@ -603,17 +603,17 @@ public class GameUpdater implements DownloadListener {
         if (opt.exists()) {
           copy(opt,new File(techniBackup,opt.getName()));
         } {
-          Util.log("[BACKUP] options.txt not found");
+          Util.logi("[BACKUP] options.txt not found");
         }
         if (optof.exists()) {
           copy(optof,new File(techniBackup,optof.getName()));
         } {
-          Util.log("[BACKUP] optionsof.txt not found");
+          Util.logi("[BACKUP] optionsof.txt not found");
         }
         if (matmos.exists()) {
           copy(matmos,new File(techniBackup,matmos.getName()));
         } {
-          Util.log("[BACKUP] matmos_options.cfg not found");
+          Util.logi("[BACKUP] matmos_options.cfg not found");
         }
 
 
@@ -626,17 +626,17 @@ public class GameUpdater implements DownloadListener {
         if (reis.exists()) {
             copyDirectory(reis,new File(mods,reis.getName()));
         } {
-            Util.log("[BACKUP] mods/rei_minimap not found");
+            Util.logi("[BACKUP] mods/rei_minimap not found");
         }
         if (mod1.exists()) {
           copyDirectory(mod1,new File(mods,mod1.getName()));
         } {
-            Util.log("[BACKUP] mods/ccSensors not found");
+            Util.logi("[BACKUP] mods/ccSensors not found");
         }
         if (mod2.exists()) {
           copyDirectory(mod2,new File(mods,mod2.getName()));
         } {
-            Util.log("[BACKUP] mods/ComputerCraft not found");
+            Util.logi("[BACKUP] mods/ComputerCraft not found");
         }
 
         // smazeme slozku

@@ -19,7 +19,7 @@ import org.spoutcraft.launcher.async.DownloadListener;
 public class DownloadUtils {
 
   public static Download downloadFile(String url, String output, String cacheName, String md5, DownloadListener listener) throws IOException {
-    Util.logi("Trying to downloading '%s'", url);
+    //Util.logi("Trying to downloading '%s'", url);
       if (Main.isOffline)
       return null;
     int tries = SettingsUtil.getLoginTries();
