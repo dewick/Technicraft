@@ -135,22 +135,22 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
 
     this.addWindowListener(this);
 
-    loginButton.setFont(new Font("Arial", Font.PLAIN, 11));
+    loginButton.setFont(getMinecraftFont(12));
     loginButton.setBounds(272, 13, 86, 23);
     loginButton.setOpaque(false);
     loginButton.addActionListener(this);
     loginButton.setEnabled(false); // disable until login info is read
-    optionsButton.setFont(new Font("Arial", Font.PLAIN, 11));
+    optionsButton.setFont(getMinecraftFont(12));
     optionsButton.setOpaque(false);
     optionsButton.addActionListener(this);
     optionsButton.setEnabled(false);
-    modsButton.setFont(new Font("Arial", Font.PLAIN, 11));
+    modsButton.setFont(getMinecraftFont(12));
     modsButton.setOpaque(false);
     modsButton.addActionListener(this);
     usernameField.setFont(new Font("Arial", Font.PLAIN, 11));
     usernameField.addActionListener(this);
     usernameField.setOpaque(false);
-    offlineMode.setFont(new Font("Arial", Font.PLAIN, 11));
+    offlineMode.setFont(getMinecraftFont(12));
     offlineMode.setOpaque(false);
     offlineMode.addActionListener(this);
 
@@ -187,21 +187,22 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     modpackList.addActionListener(this);
 
     JLabel lblMinecraftUsername = new JLabel("Username: ");
-    lblMinecraftUsername.setFont(new Font("Arial", Font.PLAIN, 11));
     lblMinecraftUsername.setHorizontalAlignment(SwingConstants.RIGHT);
     lblMinecraftUsername.setBounds(-17, 17, 150, 14);
+    lblMinecraftUsername.setFont(getMinecraftFont(12));
 
     JLabel lblPassword = new JLabel("Password: ");
-    lblPassword.setFont(new Font("Arial", Font.PLAIN, 11));
     lblPassword.setHorizontalAlignment(SwingConstants.RIGHT);
     lblPassword.setBounds(33, 42, 100, 20);
+    lblPassword.setFont(getMinecraftFont(12));
 
     passwordField = new JPasswordField();
-    passwordField.setFont(new Font("Arial", Font.PLAIN, 11));
     passwordField.setBounds(143, 42, 119, 22);
+    usernameField.setFont(getMinecraftFont(12));
+    passwordField.setFont(getMinecraftFont(15));
 
     loginSkin1 = new JButton("Login as Player");
-    loginSkin1.setFont(new Font("Arial", Font.PLAIN, 11));
+    loginSkin1.setFont(getMinecraftFont(11));
     loginSkin1.setBounds(72, 428, 119, 23);
     loginSkin1.setOpaque(false);
     loginSkin1.addActionListener(this);
@@ -209,7 +210,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     loginSkin1Image = new ArrayList<JButton>();
 
     loginSkin2 = new JButton("Login as Player");
-    loginSkin2.setFont(new Font("Arial", Font.PLAIN, 11));
+    loginSkin2.setFont(getMinecraftFont(11));
     loginSkin2.setBounds(261, 428, 119, 23);
     loginSkin2.setOpaque(false);
     loginSkin2.addActionListener(this);
@@ -221,13 +222,14 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     progressBar.setVisible(false);
     progressBar.setStringPainted(true);
     progressBar.setOpaque(true);
+    progressBar.setFont(getMinecraftFont(12));
 
     JLabel purchaseAccount = new HyperlinkJLabel("<html><u>Need a minecraft account?</u></html>", "http://www.minecraft.net/register.jsp");
     purchaseAccount.setHorizontalAlignment(SwingConstants.RIGHT);
     purchaseAccount.setBounds(243, 70, 111, 14);
 
     purchaseAccount.setText("<html><u>Need an account?</u></html>");
-    purchaseAccount.setFont(new Font("Arial", Font.PLAIN, 11));
+    purchaseAccount.setFont(getMinecraftFont(11));
     purchaseAccount.setForeground(new Color(0, 0, 255));
 
     JLabel wikiLink = new HyperlinkJLabel("<html><u>Technic WebSite</u></html>", "http://technicpack.net/");
@@ -235,12 +237,12 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     wikiLink.setBounds(233, 85, 109, 14);
 
     // wikiLink.setText();
-    wikiLink.setFont(new Font("Arial", Font.PLAIN, 11));
+    wikiLink.setFont(getMinecraftFont(11));
     wikiLink.setForeground(new Color(0, 0, 255));
 
     usernameField.setBounds(143, 14, 119, 25);
-    rememberCheckbox.setFont(new Font("Arial", Font.PLAIN, 11));
 
+    rememberCheckbox.setFont(getMinecraftFont(12));
     rememberCheckbox.setOpaque(false);
 
     editorPane.setContentType("text/html");
@@ -312,11 +314,11 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     offlineMessage.setBounds(25, 40, 217, 17);
 
     tryAgain.setOpaque(false);
-    tryAgain.setFont(new Font("Arial", Font.PLAIN, 12));
+    tryAgain.setFont(getMinecraftFont(12));
     tryAgain.setBounds(257, 20, 100, 25);
 
     offlineMode.setOpaque(false);
-    offlineMode.setFont(new Font("Arial", Font.PLAIN, 12));
+    offlineMode.setFont(getMinecraftFont(12));
     offlineMode.setBounds(257, 52, 100, 25);
 
     offlinePane.setBounds(473, 362, 372, 99);
@@ -992,4 +994,15 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
       this.profileName = profileName;
     }
   }
+
+  public final Font getMinecraftFont(int size) {
+    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    try {
+      ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, Main.class.getResourceAsStream("minecraft.ttf")));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return new Font("Minecraft", Font.PLAIN, size);
+  }
+
 }
