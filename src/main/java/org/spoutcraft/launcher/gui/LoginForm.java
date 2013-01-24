@@ -17,13 +17,7 @@
  */
 package org.spoutcraft.launcher.gui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -51,19 +45,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
-import javax.swing.SwingWorker;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import org.spoutcraft.launcher.GameUpdater;
@@ -84,21 +66,22 @@ import org.spoutcraft.launcher.exception.MCNetworkException;
 import org.spoutcraft.launcher.exception.MinecraftUserNotPremiumException;
 import org.spoutcraft.launcher.exception.NoMirrorsAvailableException;
 import org.spoutcraft.launcher.exception.OutdatedMCLauncherException;
+import org.spoutcraft.launcher.gui.components.*;
 import org.spoutcraft.launcher.gui.widget.ComboBoxRenderer;
 import org.spoutcraft.launcher.modpacks.ModLibraryYML;
 import org.spoutcraft.launcher.modpacks.ModPackListYML;
 import org.spoutcraft.launcher.modpacks.ModPackUpdater;
 import org.spoutcraft.launcher.modpacks.ModPackYML;
-import javax.swing.ImageIcon;
 
 public class LoginForm extends JFrame implements ActionListener, DownloadListener, KeyListener, WindowListener {
 
   private static final long                serialVersionUID = 1L;
   private final BackgroundPanel            contentPane;
-  private final JPasswordField             passwordField;
-  private final JComboBox                  usernameField    = new JComboBox();
-  private final JButton                    loginButton      = new JButton("Login");
-  JButton                                  optionsButton    = new JButton("Options");
+  private LitePasswordBox passwordField;
+  private LiteTextBox usernameField;
+//  private final JComboBox                  usernameField    = new JComboBox();
+  private final LiteButton                 loginButton      = new LiteButton("Login");
+  LiteButton                               optionsButton    = new LiteButton("Options");
   JButton                                  modsButton       = new JButton("Mod Select");
   final JLabel                             background       = new JLabel("Loading...");
   private final JCheckBox                  rememberCheckbox = new JCheckBox("Remember");
@@ -110,7 +93,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
   private final JButton                    loginSkin2;
   private final List<JButton>              loginSkin2Image;
   private TumblerFeedParsingWorker         tumblerFeed;
-  public final JProgressBar                progressBar;
+  public final LiteProgressBar             progressBar;
   HashMap<String, UserPasswordInformation> usernames        = new HashMap<String, UserPasswordInformation>();
   public boolean                           mcUpdate         = false;
   public boolean                           spoutUpdate      = false;
@@ -136,10 +119,12 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     this.addWindowListener(this);
 
     loginButton.setFont(getMinecraftFont(12));
-    loginButton.setBounds(272, 13, 86, 23);
+    loginButton.setBounds(252, 7, 86, 23);
     loginButton.setOpaque(false);
     loginButton.addActionListener(this);
+    loginButton.addKeyListener(this);
     loginButton.setEnabled(false); // disable until login info is read
+    optionsButton.setBounds(252, 49, 86, 23);
     optionsButton.setFont(getMinecraftFont(12));
     optionsButton.setOpaque(false);
     optionsButton.addActionListener(this);
@@ -147,9 +132,6 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     modsButton.setFont(getMinecraftFont(12));
     modsButton.setOpaque(false);
     modsButton.addActionListener(this);
-    usernameField.setFont(new Font("Arial", Font.PLAIN, 11));
-    usernameField.addActionListener(this);
-    usernameField.setOpaque(false);
     offlineMode.setFont(getMinecraftFont(12));
     offlineMode.setOpaque(false);
     offlineMode.addActionListener(this);
@@ -176,30 +158,42 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     }
     String[] itemArray = new String[i];
     modpackList = new JComboBox(items.toArray(itemArray));
-    //modpackList.setBounds(10, 10, 328, 100);  // new tekkit
     modpackList.setBounds(8, 10, 460, 80);
     ComboBoxRenderer renderer = new ComboBoxRenderer();
     renderer.setPreferredSize(new Dimension(200, 110));
-    
+
     modpackList.setRenderer(renderer);
     modpackList.setMaximumRowCount(4);
     modpackList.setSelectedItem(SettingsUtil.getModPackSelection());
     modpackList.addActionListener(this);
 
-    JLabel lblMinecraftUsername = new JLabel("Username: ");
-    lblMinecraftUsername.setHorizontalAlignment(SwingConstants.RIGHT);
-    lblMinecraftUsername.setBounds(-17, 17, 150, 14);
+    JLabel lblMinecraftUsername = new JLabel("Login");
     lblMinecraftUsername.setFont(getMinecraftFont(12));
+    lblMinecraftUsername.setHorizontalAlignment(SwingConstants.LEFT);
+    lblMinecraftUsername.setBounds(10, 17, 100, 14);
 
-    JLabel lblPassword = new JLabel("Password: ");
-    lblPassword.setHorizontalAlignment(SwingConstants.RIGHT);
-    lblPassword.setBounds(33, 42, 100, 20);
+    JLabel lblPassword = new JLabel("Password");
     lblPassword.setFont(getMinecraftFont(12));
-
-    passwordField = new JPasswordField();
-    passwordField.setBounds(143, 42, 119, 22);
+    lblPassword.setHorizontalAlignment(SwingConstants.LEFT);
+    lblPassword.setBounds(10, 58, 100, 14);
+    usernameField = new LiteTextBox(this,null);
+    passwordField = new LitePasswordBox(this,null);
     usernameField.setFont(getMinecraftFont(12));
+    usernameField.addActionListener(this);
+    //usernameField.setOpaque(false);
+    usernameField.setBounds(85, 3, 160, 29);
+    usernameField/*.getEditor()*/.addActionListener(this);
+    usernameField.setBackground(new Color(238, 238, 238, 0));
+
     passwordField.setFont(getMinecraftFont(15));
+    passwordField.setBounds(85, 47, 155, 29);
+    passwordField.addKeyListener(this);
+    passwordField.setBackground(new Color(238, 238, 238, 0));
+    //passwordField.setBorder(new LiteBorder(0, new Color(238, 238, 238, 0)));
+    //passwordField.setOpaque(false);
+
+    passwordField.setBorder(null);
+    usernameField.setBorder(null);
 
     loginSkin1 = new JButton("Login as Player");
     loginSkin1.setFont(getMinecraftFont(11));
@@ -217,11 +211,19 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     loginSkin2.setVisible(false);
     loginSkin2Image = new ArrayList<JButton>();
 
-    progressBar = new JProgressBar();
+    /*progressBar = new JProgressBar();
     progressBar.setBounds(30, 120, 400, 23);
     progressBar.setVisible(false);
     progressBar.setStringPainted(true);
     progressBar.setOpaque(true);
+    */
+    progressBar = new LiteProgressBar();
+    progressBar.setBounds(15, 90, 445, 20);
+    progressBar.setVisible(false);
+    progressBar.setStringPainted(true);
+    progressBar.setOpaque(true);
+    progressBar.setTransparency(0.70F);
+    progressBar.setHoverTransparency(0.70F);
     progressBar.setFont(getMinecraftFont(12));
 
     JLabel purchaseAccount = new HyperlinkJLabel("<html><u>Need a minecraft account?</u></html>", "http://www.minecraft.net/register.jsp");
@@ -240,10 +242,12 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     wikiLink.setFont(getMinecraftFont(11));
     wikiLink.setForeground(new Color(0, 0, 255));
 
-    usernameField.setBounds(143, 14, 119, 25);
-
     rememberCheckbox.setFont(getMinecraftFont(12));
     rememberCheckbox.setOpaque(false);
+    rememberCheckbox.setBorderPainted(false);
+    rememberCheckbox.setContentAreaFilled(false);
+    rememberCheckbox.setBorder(null);
+    rememberCheckbox.setForeground(Color.GRAY);
 
     editorPane.setContentType("text/html");
 
@@ -266,39 +270,37 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     scrollPane.getViewport().setBorder(null);
 
     editorPane.setCaretPosition(0);
-    trans2 = new JLabel();
+    trans2 = new JLabel(); // dim pod newsbox
     trans2.setBackground(new Color(229, 246, 255, 100));
     trans2.setOpaque(true);
     trans2.setBounds(473, 11, 372, 340);
 
-    JLabel login = new JLabel();
-    login.setBackground(new Color(255, 255, 255, 120));
-    login.setOpaque(true);
-    login.setBounds(473, 362, 372, 99);
+    JLabel login = new JLabel(); // dim pod login
+    login.setIcon(new ImageIcon(getClass().getResource("/org/spoutcraft/launcher/login-bg.png")));
 
-    JLabel trans;
+//    login.setBackground(new Color(255, 255, 255, 120));
+    login.setOpaque(false);
+    login.setBounds(468, 327, 302, 170);
+
+    JLabel trans; // launcher screen dim
     trans = new JLabel();
     trans.setBackground(new Color(229, 246, 255, 60));
     trans.setOpaque(true);
     trans.setBounds(0, 0, 854, 480);
 
-    usernameField.getEditor().addActionListener(this);
-    passwordField.addKeyListener(this);
     rememberCheckbox.addKeyListener(this);
 
     usernameField.setEditable(true);
     contentPane.setLayout(null);
-    rememberCheckbox.setBounds(144, 66, 93, 23);
-    // contentPane.add(lblLogo);
+    rememberCheckbox.setBounds(138, 78, 100, 23);
     contentPane.add(modpackList);
-    optionsButton.setBounds(272, 41, 86, 23);
     modsButton.setBounds(15, 66, 93, 23);
     contentPane.add(loginSkin1);
     contentPane.add(loginSkin2);
 
-    loginPane.setBounds(473, 362, 372, 106);
-    loginPane.add(lblPassword);
-    loginPane.add(lblMinecraftUsername);
+    loginPane.setBounds(getWidth()-350, getHeight()-130, 370, 110);
+    //loginPane.add(lblPassword);
+    //loginPane.add(lblMinecraftUsername);
     loginPane.add(passwordField);
     loginPane.add(usernameField);
     loginPane.add(loginButton);
@@ -306,7 +308,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     //loginPane.add(purchaseAccount);
     //loginPane.add(wikiLink);
     loginPane.add(optionsButton);
-    loginPane.add(modsButton);
+    //loginPane.add(modsButton);
     contentPane.add(loginPane);
 
     JLabel offlineMessage = new JLabel("Could not connect to minecraft.net");
@@ -328,9 +330,9 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     offlinePane.setVisible(false);
     contentPane.add(offlinePane);
 
-    contentPane.add(scrollPane);
-    contentPane.add(trans2);
-    contentPane.add(login);
+    //contentPane.add(scrollPane);
+    //contentPane.add(trans2); // dim pod newsbox
+    contentPane.add(login); // Login background style
     contentPane.add(trans);
     contentPane.add(progressBar);
 
@@ -341,7 +343,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     (new File(PlatformUtils.getWorkingDirectory(), "launcher_cache.jpg")).delete();
 
     List<Component> order = new ArrayList<Component>(6);
-    order.add(usernameField.getEditor().getEditorComponent());
+    order.add(usernameField/*.getEditor().getEditorComponent()*/);
     order.add(passwordField);
     order.add(rememberCheckbox);
     order.add(loginButton);
@@ -361,6 +363,8 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
   }
 
   public void loadLauncherData() {
+    updateBranding();
+
     MirrorUtils.updateMirrorsYMLCache();
     MD5Utils.updateMD5Cache();
     ModPackListYML.updateModPacksYMLCache();
@@ -511,7 +515,8 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
             }
             usernames.put(user, new UserPasswordInformation(password));
           }
-          this.usernameField.addItem(user);
+          Util.logd("[1] Setting usernamefield to %s", user);
+          this.usernameField.setText(user);
         }
       } catch (EOFException ignored) {
       }
@@ -559,13 +564,16 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     Object source = event.getSource();
     if (source == loginSkin1 || source == loginSkin2) {
       eventId = "Login";
-      this.usernameField.setSelectedItem(((JButton) source).getText());
+      Util.logd("[1] Setting usernamefield to %s", ((JButton) source).getText());
+      this.usernameField.setText(((JButton) source).getText());
     } else if (loginSkin1Image.contains(source)) {
       eventId = "Login";
-      this.usernameField.setSelectedItem(loginSkin1.getText());
+      Util.logd("[1] Setting usernamefield to %s", loginSkin1.getText());
+      this.usernameField.setText(loginSkin1.getText());
     } else if (loginSkin2Image.contains(source)) {
       eventId = "Login";
-      this.usernameField.setSelectedItem(loginSkin2.getText());
+      Util.logd("[1] Setting usernamefield to %s", loginSkin2.getText());
+      this.usernameField.setText(loginSkin2.getText());
     }
     if ((source == modpackList)) {
       if (ModPackListYML.currentModPack == null) {
@@ -578,7 +586,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
       SettingsUtil.setModPack(selectedItem);
       updateBranding();
     }
-    if ((eventId.equals("Login") || eventId.equals(usernameField.getSelectedItem())) && loginButton.isEnabled()) {
+    if ((eventId.equals("Login") || eventId.equals(usernameField.getText())) && loginButton.isEnabled()) {
       doLogin();
     } else if (eventId.equals("Options")) {
       options.setVisible(true);
@@ -612,8 +620,8 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
   }
 
   private void updatePasswordField() {
-    if (this.usernameField.getSelectedItem() != null) {
-      UserPasswordInformation info = usernames.get(this.usernameField.getSelectedItem().toString());
+    if (this.usernameField.getText() != null) {
+      UserPasswordInformation info = usernames.get(this.usernameField.getText().toString());
       if (info != null) {
         if (info.isHash) {
           this.passwordField.setText("");
@@ -627,7 +635,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
   }
 
   public void doLogin() {
-    doLogin(usernameField.getSelectedItem().toString(), new String(passwordField.getPassword()), false);
+    doLogin(usernameField.getText().toString(), new String(passwordField.getPassword()), false);
   }
 
   public void doLogin(final String user, final String pass) {
@@ -738,7 +746,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
         } catch (NoSuchAlgorithmException e) {
         }
 
-        gameUpdater.user = usernameField.getSelectedItem().toString(); // values[2].trim();
+        gameUpdater.user = usernameField.getText().toString(); // values[2].trim();
         gameUpdater.downloadTicket = values[1].trim();
         if (!cmdLine) {
           String password = new String(passwordField.getPassword());

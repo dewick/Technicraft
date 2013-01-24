@@ -31,7 +31,6 @@ public class LoadingScreen extends JDialog {
     // don't show a frame or title bar
     setUndecorated(true);
     setBounds(0, 0, 732, 224);
-    //setBounds(0, 0, 600, 139);
 
     // Create JPanel and set it as the content pane
     contentPane = new JPanel();

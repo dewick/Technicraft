@@ -192,7 +192,7 @@ public class ModPackUpdater extends GameUpdater {
       removePreviousModVersion(modName, installedVersion);
     }
 
-    stateChanged("Extracting " + modName + " ...", 0);
+    stateChanged("Extracting Files ...", 0);
     // Extract Mod zip
     extractCompressedFile(GameUpdater.modpackDir, modFile, true);
 
