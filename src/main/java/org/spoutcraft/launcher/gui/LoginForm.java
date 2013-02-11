@@ -94,7 +94,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
   private final List<JButton>              loginSkin2Image;
   private TumblerFeedParsingWorker         tumblerFeed;
   public final LiteProgressBar             progressBar;
-  HashMap<String, UserPasswordInformation> usernames        = new HashMap<String, UserPasswordInformation>();
+  HashMap<String, LoginForm.UserPasswordInformation> usernames        = new HashMap<String, LoginForm.UserPasswordInformation>();
   public boolean                           mcUpdate         = false;
   public boolean                           spoutUpdate      = false;
   public boolean                           modpackUpdate    = false;
@@ -280,8 +280,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
 
 //    login.setBackground(new Color(255, 255, 255, 120));
     login.setOpaque(false);
-    login.setBounds(468, 327, 302, 170);
-
+    
     JLabel trans; // launcher screen dim
     trans = new JLabel();
     trans.setBackground(new Color(229, 246, 255, 60));
@@ -298,7 +297,15 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
     contentPane.add(loginSkin1);
     contentPane.add(loginSkin2);
 
-    loginPane.setBounds(getWidth()-350, getHeight()-130, 370, 110);
+    if (PlatformUtils.getPlatform() == PlatformUtils.OS.windows) {
+        loginPane.setBounds(getWidth()-350, getHeight() - 150, 370, 110);
+        login.setBounds(468, 307, 302, 170);
+    }
+    else 
+    {
+        login.setBounds(468, 327, 302, 170);
+        loginPane.setBounds(getWidth()-350, getHeight()-130, 370, 110);
+    }
     //loginPane.add(lblPassword);
     //loginPane.add(lblMinecraftUsername);
     loginPane.add(passwordField);
@@ -360,6 +367,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
       offlinePane.setVisible(true);
       loginPane.setVisible(false);
     }
+    loadLauncherData();
   }
 
   public void loadLauncherData() {
@@ -487,7 +495,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
             byte[] hash = new byte[32];
             dis.read(hash);
 
-            usernames.put(user, new UserPasswordInformation(hash));
+            usernames.put(user, new LoginForm.UserPasswordInformation(hash));
           } else {
             String password = dis.readUTF();
             if (!password.isEmpty()) {
@@ -513,7 +521,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
                 }
               }
             }
-            usernames.put(user, new UserPasswordInformation(password));
+            usernames.put(user, new LoginForm.UserPasswordInformation(password));
           }
           Util.logd("[1] Setting usernamefield to %s", user);
           this.usernameField.setText(user);
@@ -542,7 +550,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
       }
       for (String user : usernames.keySet()) {
         dos.writeUTF(user);
-        UserPasswordInformation info = usernames.get(user);
+        LoginForm.UserPasswordInformation info = usernames.get(user);
         dos.writeBoolean(info.isHash);
         if (info.isHash) {
           dos.write(info.passwordHash);
@@ -621,7 +629,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
 
   private void updatePasswordField() {
     if (this.usernameField.getText() != null) {
-      UserPasswordInformation info = usernames.get(this.usernameField.getText().toString());
+      LoginForm.UserPasswordInformation info = usernames.get(this.usernameField.getText().toString());
       if (info != null) {
         if (info.isHash) {
           this.passwordField.setText("");
@@ -675,7 +683,7 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
           this.cancel(true);
           progressBar.setVisible(false);
         } catch (MCNetworkException e) {
-          UserPasswordInformation info = null;
+          LoginForm.UserPasswordInformation info = null;
 
           for (String username : usernames.keySet()) {
             if (username.equalsIgnoreCase(user)) {
@@ -751,12 +759,12 @@ public class LoginForm extends JFrame implements ActionListener, DownloadListene
         if (!cmdLine) {
           String password = new String(passwordField.getPassword());
           if (rememberCheckbox.isSelected()) {
-            usernames.put(gameUpdater.user, new UserPasswordInformation(password, profileName));
+            usernames.put(gameUpdater.user, new LoginForm.UserPasswordInformation(password, profileName));
           } else {
             if (digest == null) {
-              usernames.put(gameUpdater.user, new UserPasswordInformation(""));
+              usernames.put(gameUpdater.user, new LoginForm.UserPasswordInformation(""));
             } else {
-              usernames.put(gameUpdater.user, new UserPasswordInformation(digest.digest(password.getBytes())));
+              usernames.put(gameUpdater.user, new LoginForm.UserPasswordInformation(digest.digest(password.getBytes())));
             }
           }
           writeUsernameList();
