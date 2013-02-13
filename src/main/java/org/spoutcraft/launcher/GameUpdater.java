@@ -166,7 +166,7 @@ public class GameUpdater implements DownloadListener {
 
     File nativesZip = new File(GameUpdater.tempDir.getPath() + File.separator + "natives.zip");
     File nativesDirectory = new File(GameUpdater.binDir, "natives");
-    extractCompressedFile(nativesDirectory, nativesZip, true);
+    extractCompressedFile(nativesDirectory, nativesZip, true, "Natives");
 
     MinecraftYML.setInstalledVersion(minecraftVersion);
   }
@@ -231,10 +231,10 @@ public class GameUpdater implements DownloadListener {
   }
 
   public void extractCompressedFile(File destinationDirectory, File compressedFile) {
-    extractCompressedFile(destinationDirectory, compressedFile, false);
+    extractCompressedFile(destinationDirectory, compressedFile, false, "xx");
   }
 
-  protected void extractCompressedFile(File destinationDirectory, File compressedFile, Boolean deleteOnSuccess) {
+  protected void extractCompressedFile(File destinationDirectory, File compressedFile, Boolean deleteOnSuccess, String modName) {
     try {
       Util.log("Extracting %s to %s", compressedFile.getPath(), destinationDirectory.getPath());
       if (!compressedFile.exists()) {
@@ -251,13 +251,13 @@ public class GameUpdater implements DownloadListener {
       ProgressMonitor monitor = zipFile.getProgressMonitor();
       while (monitor.getState() == ProgressMonitor.STATE_BUSY) {
         long totalProgress = monitor.getWorkCompleted() / monitor.getTotalWork();
-        stateChanged(String.format("Extracting '%s'...", monitor.getFileName()), totalProgress);
+        stateChanged(String.format("Extracting %s", modName), totalProgress);
       }
       File metainfDirectory = new File(destinationDirectory, "META-INF");
       if (metainfDirectory.exists()) {
         Util.removeDirectory(metainfDirectory);
       }
-      stateChanged(String.format("Extracted '%s'", compressedFile.getPath()), 100f);
+      stateChanged(String.format("Extracted %s", compressedFile.getPath()), 100f);
       if (monitor.getResult() == ProgressMonitor.RESULT_ERROR) {
         if (monitor.getException() != null) {
           monitor.getException().printStackTrace();
@@ -291,14 +291,14 @@ public class GameUpdater implements DownloadListener {
     if (!tempDir.exists())
       tempDir.mkdir();
 
-    stateChanged("Downloading Native LWJGL files...", -1);
+    stateChanged("Downloading LWJGL files...", -1);
     DownloadUtils.downloadFile(getNativesUrl(fname), tempDir.getPath() + File.separator + (!SettingsUtil.isLatestLWJGL() ? "natives.jar.lzma" : "natives.zip"));
-    stateChanged("Downloaded Native LWJGL files...", 100);
+    stateChanged("Downloaded LWJGL files...", 100);
 
     if (!SettingsUtil.isLatestLWJGL()) {
-      stateChanged("Extracting Native LWJGL files...", -1);
+      stateChanged("Extracting LWJGL files...", -1);
       extractLZMA(GameUpdater.tempDir.getPath() + File.separator + "natives.jar.lzma", GameUpdater.tempDir.getPath() + File.separator + "natives.zip");
-      stateChanged("Extracted Native LWJGL files...", 100);
+      stateChanged("Extracted LWJGL files...", 100);
     }
 
     return new File(tempDir.getPath() + File.separator + "natives.jar.lzma");

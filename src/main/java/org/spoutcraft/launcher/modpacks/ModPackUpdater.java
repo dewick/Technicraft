@@ -100,7 +100,7 @@ public class ModPackUpdater extends GameUpdater {
       if (download.isSuccess()) {
         stateChanged("Extracting Custom Zip Files ...", 0);
         // Extract Natives
-        extractCompressedFile(GameUpdater.modpackDir, customZipFile, true);
+        extractCompressedFile(GameUpdater.modpackDir, customZipFile, true, "Custom zip");
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -194,7 +194,7 @@ public class ModPackUpdater extends GameUpdater {
 
     stateChanged("Extracting Files ...", 0);
     // Extract Mod zip
-    extractCompressedFile(GameUpdater.modpackDir, modFile, true);
+    extractCompressedFile(GameUpdater.modpackDir, modFile, true, modName);
 
     InstalledModsYML.setInstalledModVersion(modName, modVersion);
 
